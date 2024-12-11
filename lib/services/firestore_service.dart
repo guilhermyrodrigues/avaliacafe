@@ -12,27 +12,22 @@ class FirestoreService {
       _firestore.collection('reviews');
 
   // Adicionar cafeteria
-  static Future<void> addCafe(String name, String address) async {
-    try {
-      await _cafesCollection.add({
-        'name': name,
-        'address': address,
-      });
-    } catch (e) {
-      print('Erro ao adicionar cafeteria: $e');
-    }
+static Future<void> addCafe(String name, String address, String? imageUrl) async {
+    final doc = FirebaseFirestore.instance.collection('cafes').doc();
+    await doc.set({
+      'name': name,
+      'address': address,
+      'imageUrl': imageUrl,
+    });
   }
 
-  // Atualizar cafeteria
-  static Future<void> updateCafe(String cafeId, String name, String address) async {
-    try {
-      await _cafesCollection.doc(cafeId).update({
-        'name': name,
-        'address': address,
-      });
-    } catch (e) {
-      print('Erro ao atualizar cafeteria: $e');
-    }
+  static Future<void> updateCafe(String id, String name, String address, String? imageUrl) async {
+    final doc = FirebaseFirestore.instance.collection('cafes').doc(id);
+    await doc.update({
+      'name': name,
+      'address': address,
+      'imageUrl': imageUrl,
+    });
   }
 
   // Deletar cafeteria
@@ -52,6 +47,7 @@ class FirestoreService {
           id: doc.id,
           name: doc['name'],
           address: doc['address'],
+          imageUrl: doc['imageUrl']
         );
       }).toList();
     });

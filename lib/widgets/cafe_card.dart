@@ -16,15 +16,46 @@ class CafeCard extends StatelessWidget {
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: ListTile(
-          leading: cafe.imageUrl != null
-              ? CircleAvatar(
-                  backgroundImage: NetworkImage(cafe.imageUrl!),
+          leading: (cafe.imageUrl.isNotEmpty && isValidUrl(cafe.imageUrl))
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    cafe.imageUrl,
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(Icons.image_not_supported, size: 50);
+                    },
+                  ),
                 )
-              : const CircleAvatar(child: Icon(Icons.local_cafe)),
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(
+                    'assets/images/placeholder.png',
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                ),
           title: Text(cafe.name),
           subtitle: Text(cafe.address),
         ),
       ),
     );
+  }
+
+  // Método para validar URL
+  bool isValidUrl(String url) {
+    final uri = Uri.tryParse(url);
+    return uri != null && uri.isAbsolute;
   }
 }

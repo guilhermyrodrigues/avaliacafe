@@ -9,6 +9,7 @@ class AddCafeScreen extends StatelessWidget {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
+  final TextEditingController imageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +17,7 @@ class AddCafeScreen extends StatelessWidget {
     if (cafe != null) {
       nameController.text = cafe!.name;
       addressController.text = cafe!.address;
+      imageController.text = cafe!.imageUrl;
     }
 
     return Scaffold(
@@ -35,15 +37,21 @@ class AddCafeScreen extends StatelessWidget {
               controller: addressController,
               decoration: const InputDecoration(labelText: 'Endereço'),
             ),
+            TextField(
+              controller: imageController,
+              decoration: const InputDecoration(labelText: 'URL da Imagem'),
+            ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {
                 if (nameController.text.isEmpty ||
-                    addressController.text.isEmpty) {
+                    addressController.text.isEmpty ||
+                    imageController.text.isEmpty) {
                   // Validação básica
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Preencha todos os campos!'),
+                      content: Text(
+                          'Preencha todos os campos, incluindo a URL da imagem!'),
                     ),
                   );
                   return;
@@ -54,6 +62,7 @@ class AddCafeScreen extends StatelessWidget {
                   await FirestoreService.addCafe(
                     nameController.text,
                     addressController.text,
+                    imageController.text,
                   );
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -66,6 +75,7 @@ class AddCafeScreen extends StatelessWidget {
                     cafe!.id,
                     nameController.text,
                     addressController.text,
+                    imageController.text,
                   );
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -74,7 +84,6 @@ class AddCafeScreen extends StatelessWidget {
                   );
                 }
 
-                // Redireciona para a tela principal
                 Navigator.pop(context);
               },
               child: const Text('Salvar'),

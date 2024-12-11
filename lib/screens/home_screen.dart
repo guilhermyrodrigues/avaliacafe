@@ -7,6 +7,12 @@ import '../models/cafe_model.dart';
 class HomeScreen extends StatelessWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  // Método para validar URL
+  bool isValidUrl(String url) {
+    final uri = Uri.tryParse(url);
+    return uri != null && uri.isAbsolute;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,15 +39,43 @@ class HomeScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               var data = cafeterias[index].data() as Map<String, dynamic>;
               var id = cafeterias[index].id;
+
+              // Recuperando a URL da imagem
+              var imageUrl = data['imageUrl'] ?? '';
+              if (imageUrl.isEmpty || !isValidUrl(imageUrl)) {
+                imageUrl = 'https://via.placeholder.com/150'; // URL de placeholder
+              }
+
               var cafe = CafeModel(
                 id: id,
                 name: data['name'] ?? 'Sem Nome',
                 address: data['address'] ?? 'Sem Endereço',
+                imageUrl: imageUrl,
               );
 
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: ListTile(
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      cafe.imageUrl,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.image_not_supported, size: 50);
+                      },
+                    ),
+                  ),
                   title: Text(cafe.name),
                   subtitle: Text(cafe.address),
                   trailing: Row(
