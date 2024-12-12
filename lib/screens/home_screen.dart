@@ -17,7 +17,11 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cafeterias'),
+        title: const Text(
+          'Cafeterias',
+          style: TextStyle(color: Colors.white), // White text for app bar
+        ),
+        backgroundColor: Colors.brown, // Brown app bar background
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore.collection('cafes').snapshots(),
@@ -77,7 +81,11 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   title: Text(cafe.name),
-                  subtitle: Text(cafe.address),
+                  subtitle: Text(
+                    cafe.address,
+                    maxLines: 2, // Allow 2 lines for address on Android
+                    overflow: TextOverflow.ellipsis, // Handle overflow with ellipsis
+                  ), // Address field adjustments
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -115,6 +123,7 @@ class HomeScreen extends StatelessWidget {
                           );
                         },
                       ),
+                      // ... your existing trailing IconButton code
                     ],
                   ),
                 ),
@@ -138,3 +147,10 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+

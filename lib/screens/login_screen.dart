@@ -10,23 +10,44 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(
+        title: const Text(
+          'Login',
+          style: TextStyle(color: Colors.white), // White text for app bar
+        ),
+        backgroundColor: Colors.brown, // Brown app bar background
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Custom email field with icon and brown border
             TextField(
               controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: InputDecoration(
+                labelText: 'Email',
+                prefixIcon: const Icon(Icons.email, color: Colors.brown),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.brown, width: 2.0),
+                ),
+              ),
             ),
             const SizedBox(height: 16),
+            // Custom password field with icon and brown border
             TextField(
               controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Senha'),
-              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Senha',
+                prefixIcon: const Icon(Icons.lock, color: Colors.brown),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.brown, width: 2.0),
+                ),
+              ),
+              obscureText: true, // Aqui você define o texto como oculto
             ),
             const SizedBox(height: 16),
+            // Custom elevated button with rounded corners and brown color
             ElevatedButton(
               onPressed: () async {
                 await AuthService.signIn(
@@ -35,6 +56,12 @@ class LoginScreen extends StatelessWidget {
                 );
               },
               child: const Text('Entrar'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 221, 184, 171), // Set button background color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                ),
+              ),
             ),
           ],
         ),
